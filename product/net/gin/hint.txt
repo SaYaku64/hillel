@@ -1,0 +1,21 @@
+r := gin.Default(): Ініціалізація маршрутизатора Gin.
+r.GET("/hello", ...): Маршрут для обробки GET-запиту.
+r.POST("/post", ...): Маршрут для обробки POST-запиту з JSON-параметрами.
+c.ShouldBindJSON(&json): Автоматичне биндування JSON до структури.
+c.Param("name"): Отримання параметру з URL.
+c.DefaultQuery("name", "Guest"): Отримання параметру запиту з дефолтним значенням.
+c.PostForm("name"): Отримання параметру з форми.
+r.Group("/v1"): Групування маршрутів
+r.Static("/static", "./static"): Обробка статичних файлів
+
+Середовища (middleware)
+r.Use(gin.Logger())
+r.Use(gin.Recovery())
+
+Шаблони 
+r.LoadHTMLGlob("templates/*")
+r.GET("/index", func(c *gin.Context) {
+    c.HTML(http.StatusOK, "index.tmpl", gin.H{
+        "title": "Main website",
+    })
+})
