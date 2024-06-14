@@ -8,6 +8,7 @@ var ListOfLines = []string{
 	"Simple BUT interesting program",
 	"Do Your BEST",
 	"GoOd LuCk!",
+	"Test StrinG",
 }
 
 var (
