@@ -1,4 +1,4 @@
-package gochaninterface
+package main
 
 var ListOfLines = []string{
 	"Hello Everyone!",
