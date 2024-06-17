@@ -30,8 +30,47 @@ func (rp ReverseProcessor) Process(data string) {
 	rp.bisiv <- string(reverseData)
 }
 
+//func ReadLines(filename string) (out []string, err error) {
+//	file, err := os.Open(filename)
+//	if err != nil {
+//		return []string{}, err
+//	}
+//	defer file.Close()
+//
+//	scanner := bufio.NewScanner(file)
+//	for scanner.Scan() {
+//		out = append(out, scanner.Text())
+//	}
+//
+//	return out, err
+//}
+//
+//func writeLineExample(filename string, lines []string) error {
+//	file, err := os.Create(filename)
+//	if err != nil {
+//		return err
+//	}
+//	defer file.Close()
+//
+//	writer := bufio.NewWriter(file)
+//
+//	for _, line := range lines {
+//		fmt.Fprintln(writer, line)
+//	}
+//	writer.Flush()
+//	return nil
+//}
+
 func main() {
 	var wg sync.WaitGroup
+
+	//ListOfLines, err := ReadLines("input.txt")
+	//if err != nil {
+	//	fmt.Println("Error reading file:", err)
+	//	return
+	//}
+	//var UppercaseLines []string
+	//var ReverseLines []string
 
 	UPChan := make(chan string)
 	RPChan := make(chan string)
@@ -84,4 +123,12 @@ func main() {
 	for _, line := range ReverseLines {
 		fmt.Printf("%s\n", line)
 	}
+
+	//if err := writeLineExample("uppercase_output.txt", UppercaseLines); err != nil {
+	//	fmt.Println("Error writing UppercaseLines to file:", err)
+	//}
+	//
+	//if err := writeLineExample("reverse_output.txt", ReverseLines); err != nil {
+	//	fmt.Println("Error writing ReverseLines to file:", err)
+	//}
 }

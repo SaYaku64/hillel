@@ -1,0 +1,148 @@
+	"Hello Everyone!",
+	"Let's make THIS task",
+	"a bit cooler than others",
+	"YoU WiLL NeeD tO Make",
+	"Simple BUT interesting program",
+	"Do Your BEST",
+	"GoOd LuCk!",
+
+	package main
+
+    import (
+    	"bufio"
+    	"fmt"
+    	"os"
+    	"strings"
+    	"sync"
+    )
+
+    type Processor interface {
+    	Process(data string)
+    }
+
+    type UppercaseProcessor struct {
+    	bisiv chan string
+    }
+
+    func (up UppercaseProcessor) Process(data string) {
+    	up.bisiv <- strings.ToUpper(data)
+    }
+
+    type ReverseProcessor struct {
+    	bisiv chan string
+    }
+
+    func (rp ReverseProcessor) Process(data string) {
+    	reverseData := []rune(data)
+    	for i, j := 0, len(reverseData)-1; i < j; i, j = i+1, j-1 {
+    		reverseData[i], reverseData[j] = reverseData[j], reverseData[i]
+    	}
+    	rp.bisiv <- string(reverseData)
+    }
+
+    // Read lines from a file
+    func ReadLines(filename string) (out []string, err error) {
+    	file, err := os.Open(filename)
+    	if err != nil {
+    		return []string{}, err
+    	}
+    	defer file.Close()
+
+    	scanner := bufio.NewScanner(file)
+    	for scanner.Scan() {
+    		out = append(out, scanner.Text())
+    	}
+
+    	return out, err
+    }
+
+    // Write lines to a file
+    func writeLineExample(filename string, lines []string) error {
+    	file, err := os.Create(filename)
+    	if err != nil {
+    		return err
+    	}
+    	defer file.Close()
+
+    	writer := bufio.NewWriter(file)
+
+    	for _, line := range lines {
+    		fmt.Fprintln(writer, line)
+    	}
+
+    	writer.Flush()
+
+    	return nil
+    }
+
+    func main() {
+    	var wg sync.WaitGroup
+
+    	// Читаємо рядки з файлу
+    	ListOfLines, err := ReadLines("input.txt")
+    	if err != nil {
+    		fmt.Println("Error reading file:", err)
+    		return
+    	}
+
+    	var UppercaseLines []string
+    	var ReverseLines []string
+
+    	UPChan := make(chan string)
+    	RPChan := make(chan string)
+
+    	up := UppercaseProcessor{bisiv: UPChan}
+    	rp := ReverseProcessor{bisiv: RPChan}
+
+    	// Обробка Uppercase
+    	wg.Add(1)
+    	go func() {
+    		defer wg.Done()
+    		for _, line := range ListOfLines {
+    			up.Process(line)
+    		}
+    		close(UPChan)
+    	}()
+
+    	// Обробка Reverse
+    	wg.Add(1)
+    	go func() {
+    		defer wg.Done()
+    		for _, line := range ListOfLines {
+    			rp.Process(line)
+    		}
+    		close(RPChan)
+    	}()
+
+    	// Збір Uppercase результатів
+    	wg.Add(1)
+    	go func() {
+    		defer wg.Done()
+    		for line := range UPChan {
+    			UppercaseLines = append(UppercaseLines, line)
+    		}
+    	}()
+
+    	// Збір Reverse результатів
+    	wg.Add(1)
+    	go func() {
+    		defer wg.Done()
+    		for line := range RPChan {
+    			ReverseLines = append(ReverseLines, line)
+    		}
+    	}()
+
+    	// Очікування завершення всіх горутин
+    	wg.Wait()
+
+    	// Запис результатів у файли
+    	if err := writeLineExample("uppercase_output.txt", UppercaseLines); err != nil {
+    		fmt.Println("Error writing UppercaseLines to file:", err)
+    	}
+
+    	if err := writeLineExample("reverse_output.txt", ReverseLines); err != nil {
+    		fmt.Println("Error writing ReverseLines to file:", err)
+    	}
+
+    	fmt.Println("Processing complete. Results are written to files.")
+    }
