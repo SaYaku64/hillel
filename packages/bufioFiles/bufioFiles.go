@@ -23,7 +23,7 @@ func ReadLines(filename string) (out []string, err error) {
 }
 
 // example for writing data to file
-func writeLineExample(filename string, lines []string) error {
+func WriteLineExample(filename string, lines []string) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err

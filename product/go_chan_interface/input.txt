@@ -1,6 +1,3 @@
-package main
-
-var ListOfLines = []string{
 	"Hello Everyone!",
 	"Let's make THIS task",
 	"a bit cooler than others",
@@ -8,9 +5,3 @@ var ListOfLines = []string{
 	"Simple BUT interesting program",
 	"Do Your BEST",
 	"GoOd LuCk!",
-}
-
-var (
-	UppercaseLines = []string{}
-	ReverseLines   = []string{}
-)
