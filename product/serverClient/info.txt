@@ -1,0 +1,36 @@
+Необхідно написати HTTP клієнт на Go, який буде обробляти всі запити зі списку нижче:
+
+	GET /
+
+	GET /hello
+
+	GET /api/v1/rick
+
+	GET /api/v1/say (+query "name")
+    
+	GET /api/v1/searchBooks (+query "title" and "author" )
+
+	POST /api/v1/register
+        name (string)
+        password (string)
+
+	POST /api/v1/calculate
+        first_num (float64)
+        second_num (float64)
+        action (string)
+            addition
+            subtraction
+            multiplication
+            division
+
+	POST /api/v1/translate
+        text (string)
+        sourceLanguage (string) f.e. "en"
+        targetLanguage (string) f.e. "ua"
+    answer:
+        translatedText (string)
+
+Сайт: https://sayaku2.alwaysdata.net/
+
+Формат здачі: Окремі функції під кожен запит в цій папці з валідною обробкою результатів.
+
