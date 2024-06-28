@@ -28,6 +28,8 @@ func main() {
 	mux.HandleFunc("/api/v1/rickRolled", templates.RickRolledHandler)
 	mux.HandleFunc("/api/v1/say", sayHandler)
 	mux.HandleFunc("/api/v1/calculate", calculateHandler)
+	mux.HandleFunc("/api/v1/searchBooks", searchBooks)
+	mux.HandleFunc("/api/v1/translateText", translateText)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -158,4 +160,76 @@ func WriteJSON(w http.ResponseWriter, obj interface{}) error {
 	}
 	_, err = w.Write(jsonBytes)
 	return err
+}
+
+type Book struct {
+	Title  string `json:"title"`
+	Author string `json:"author"`
+}
+
+type BookResponse struct {
+	Status string `json:"status"`
+	Books  []Book `json:"books"`
+}
+
+func searchBooks(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Query().Get("title")
+	author := r.URL.Query().Get("author")
+
+	books := []Book{
+		{Title: "Go Programming", Author: "John Doe"},
+		{Title: "Advanced Go Programming", Author: "John Doe"},
+		{Title: "Dorohedoro", Author: "Q Hayashida"},
+		{Title: "Captain Blood: His Odyssey", Author: "Rafael Sabatini"},
+		{Title: "Harry Potter", Author: "Joanne Rowling"},
+	}
+
+	var filteredBooks []Book
+	for _, book := range books {
+		if (title == "" || book.Title == title) && (author == "" || book.Author == author) {
+			filteredBooks = append(filteredBooks, book)
+		}
+	}
+
+	if len(filteredBooks) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		resp := BookResponse{
+			Status: "no books with this filter",
+		}
+		json.NewEncoder(w).Encode(resp)
+
+		return
+	}
+
+	resp := BookResponse{
+		Status: "success",
+		Books:  filteredBooks,
+	}
+	json.NewEncoder(w).Encode(resp)
+}
+
+type TranslateRequest struct {
+	Text           string `json:"text"`
+	SourceLanguage string `json:"sourceLanguage"`
+	TargetLanguage string `json:"targetLanguage"`
+}
+
+type TranslateResponse struct {
+	Status         string `json:"status"`
+	TranslatedText string `json:"translatedText"`
+}
+
+func translateText(w http.ResponseWriter, r *http.Request) {
+	var req TranslateRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	resp := TranslateResponse{
+		Status:         "success",
+		TranslatedText: fmt.Sprintf("Imagine that \"%s\" translated from \"%s\" to \"%s\". There is almost none of free-to-use api translator...", req.Text, req.SourceLanguage, req.TargetLanguage),
+	}
+	json.NewEncoder(w).Encode(resp)
 }
