@@ -1,4 +1,4 @@
-module github.com/SaYaku64/hillel
+module github.com/SaYaku64/hillel/product
 
 go 1.21.4
 
