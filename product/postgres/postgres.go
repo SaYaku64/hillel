@@ -45,17 +45,13 @@ func main() {
 
 	fmt.Println("Підключення до PostgreSQL встановлено!")
 
-	if err := createTable(db); err != nil {
-		fmt.Println("createTable error: err =", err)
+	// if err := createTable(db); err != nil {
+	// 	log.Fatalln("createTable error: err =", err)
+	// }
 
-		return
-	}
-
-	if err := insertUser(db, "Alex", 30); err != nil {
-		fmt.Println("insertUser error: err =", err)
-
-		return
-	}
+	// if err := insertUser(db, "Alex", 30); err != nil {
+	// 	log.Fatalln("insertUser error: err =", err)
+	// }
 
 	// userId := 1
 
@@ -65,23 +61,23 @@ func main() {
 	// 	fmt.Println("Користувач не знайдений")
 	// case nil:
 	// default:
-	// 	fmt.Println("getUser error: err =", err)
+	// 	log.Fatalln("getUser error: err =", err)
 	// }
 	// fmt.Printf("Get user: %+v\n", userFromDB)
 
 	// if err := updateUser(db, userId, 12); err != nil {
-	// 	fmt.Println("updateUser error: err =", err)
-
-	// 	return
+	// 	log.Fatalln("updateUser error: err =", err)
 	// }
 	// fmt.Printf("User with id %d updated\n", userId)
 
 	// if err := deleteUser(db, userId); err != nil {
-	// 	fmt.Println("deleteUser error: err =", err)
-
-	// 	return
+	// 	log.Fatalln("deleteUser error: err =", err)
 	// }
 	// fmt.Printf("User with id %d deleted\n", userId)
+
+	// TRANSACTION EXAMPLE
+	transaction(db)
+	// TRANSACTION EXAMPLE
 
 	fmt.Println("All actions done!")
 }
